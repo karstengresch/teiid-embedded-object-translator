@@ -1,0 +1,26 @@
+<vdb name="objectExampleVDB" version="1">
+  <model name="Team" visible="false">
+    <source name="objsource" translator-name="map-cache" connection-jndi-name="java:de.redhat.poc.jdv.TeamObject"/>
+    <metadata type="DDL"><![CDATA[
+            CREATE FOREIGN TABLE Team (
+                TeamObject Object OPTIONS (NAMEINSOURCE 'this', SELECTABLE FALSE, UPDATABLE FALSE, SEARCHABLE 'Unsearchable', NATIVE_TYPE 'de.redhat.poc.jdv.TeamObject'),
+                TeamName varchar(255) PRIMARY KEY OPTIONS (SEARCHABLE 'Searchable', NATIVE_TYPE 'java.lang.String'),
+                PlayerName varchar(255) OPTIONS (SEARCHABLE 'Searchable', NATIVE_TYPE 'java.lang.String')
+               ) OPTIONS (UPDATABLE TRUE);
+
+         ]]> </metadata>
+  </model>
+  <!--<model name="TeamView" type="VIRTUAL">
+    <metadata type="DDL"><![CDATA[
+             CREATE VIEW Players (
+                  TeamName varchar(255) PRIMARY KEY,
+                  PlayerName varchar(255)
+             )
+             AS
+             SELECT t.TeamName, y.Name FROM Team as T,
+                   OBJECTTABLE('m.players' PASSING T.TeamObject as m COLUMNS Name string 'teiid_row') as y;
+
+        ]]> </metadata>
+  </model>-->
+
+</vdb>

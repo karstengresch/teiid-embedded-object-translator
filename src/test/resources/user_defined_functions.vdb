@@ -6,6 +6,24 @@
                              ]]>
     </metadata>
   </model>
+
+  <model name="MultiValueModel" type="VIRTUAL">
+    <metadata type="DDL"><![CDATA[
+             CREATE VIRTUAL FUNCTION getManyValues(celsius string) RETURNS object OPTIONS (JAVA_CLASS 'de.redhat.poc.jdv.TemperatureConverter',  JAVA_METHOD 'getManyValues');
+
+                             ]]>
+    </metadata>
+  </model>
+
+
+
+  <!--
+
+  SELECT AT.* FROM OBJECTTABLE('udf_rows' PASSING foo(parm1) AS udf_rows COLUMNS udf_row OBJECT 'teiid_row') AS OT, ARRAYTABLE(OT.udf_row COLUMNS col1 type1, col2 type2 ...) AS AT
+
+  -->
+
+
 </vdb>
 
 <!--

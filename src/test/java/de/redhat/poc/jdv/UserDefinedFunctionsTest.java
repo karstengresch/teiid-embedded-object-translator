@@ -63,8 +63,7 @@ public class UserDefinedFunctionsTest
   }
 
   @Test
-  public void testUserDefinedFunctionCall()
-
+  public void testUserDefinedFunctionCallSingleResult()
   {
     // Add VDB => shall contain void method
     try
@@ -104,23 +103,47 @@ public class UserDefinedFunctionsTest
     }
     try
     {
-      List<Object> temperature = executeObject(connection, "SELECT celsiusToFahrenheit(100)", false);
+      List<Object> temperature = executeObject(connection, "SELECT celsiusToFahrenheit(100)", true);
       assertTrue(!temperature.isEmpty());
       assertTrue(temperature.get(0).equals(BigDecimal.valueOf(212.0)));
-
-
+      System.out.println("Result was: " + temperature.get(0));
     }
     catch (Exception e) // doesn't catch the exception!
     {
       e.printStackTrace();
       fail();
     }
-
-
-
-
   }
 
+
+  @Test
+  public void testUserDefinedFunctionCallListResult()
+  {
+    // TODO assert that VDB already is there OR create separate one!
+
+    Connection connection = null;
+    try
+    {
+      connection = embeddedServer.getDriver().connect("jdbc:teiid:TemperatureVDB", null);
+    }
+    catch (SQLException e)
+    {
+      e.printStackTrace();
+      fail();
+    }
+    try
+    {
+      List<Object> resultList = executeObject(connection, "SELECT getManyValues(\'SuperDuperId\')", false);
+      assertTrue(!resultList.isEmpty());
+      // assertTrue(temperature.get(0).equals(BigDecimal.valueOf(212.0)));
+      System.out.println("Result was: " + resultList.get(0));
+    }
+    catch (Exception e) // doesn't catch the exception!
+    {
+      e.printStackTrace();
+      fail();
+    }
+  }
 
 
   @AfterClass

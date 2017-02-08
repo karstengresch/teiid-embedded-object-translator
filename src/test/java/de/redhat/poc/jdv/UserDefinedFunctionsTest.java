@@ -102,7 +102,7 @@ public class UserDefinedFunctionsTest
     }
     try
     {
-      execute(connection, "SELECT celsiusToFahrenheit(100) from TemperatureVDB.TemperatureModel", false);
+      execute(connection, "SELECT celsiusToFahrenheit(100)", false);
 
     }
     catch (Exception e) // doesn't catch the exception!

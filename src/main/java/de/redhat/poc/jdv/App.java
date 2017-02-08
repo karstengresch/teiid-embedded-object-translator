@@ -5,7 +5,10 @@ import org.teiid.runtime.EmbeddedServer;
 import org.teiid.translator.ExecutionFactory;
 
 import java.sql.Connection;
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 import static de.redhat.poc.jdv.JDBCUtils.execute;
 
@@ -18,25 +21,37 @@ public class App
 {
     public static void main( String[] args ) throws Exception
     {
-        System.out.println( "Hello World!" );
+        System.out.println( "Starting Teiid Embedded..." );
         TeamObject theTestObject = preparePlayers();
         Map<String, Object> testMap = new LinkedHashMap<String, Object>();
         testMap.put("teamObjectKey", theTestObject);
 
+        // "durch die Brust ins Auge" (German de-facto-proverb)
+        /*DefaultCacheManager defaultCacheManager = new DefaultCacheManager();
+        defaultCacheManager.defineConfiguration("infinispan_teamobject", new ConfigurationBuilder().simpleCache(true).build());
+        Cache<String, Object> cache = defaultCacheManager.getCache("infinispan_teamobject");
+        cache.put("teamObjectKey", theTestObject);
+*/
         // Teiid stuff
-        EmbeddedServer server = new EmbeddedServer();
-        server.start(new EmbeddedConfiguration());
+        EmbeddedServer embeddedServer = new EmbeddedServer();
+        embeddedServer.start(new EmbeddedConfiguration());
+        // ExecutionFactory executionFactory = new SimpleMapCacheExecutionFactory();
+
         ExecutionFactory executionFactory = new ExecutionFactory();
         executionFactory.start();
-        server.addTranslator("map-cache", executionFactory);
+        embeddedServer.addTranslator("map-cache", executionFactory);
         executionFactory.setSupportsDirectQueryProcedure(true);
-        server.deployVDB(App.class.getClassLoader().getResourceAsStream("object_example.vdb"));
+        embeddedServer.deployVDB(App.class.getClassLoader().getResourceAsStream("object_example.vdb"));
+        // server.deployVDB(App.class.getClassLoader().getResourceAsStream("java_method.vdb"));
 
-        Connection c = server.getDriver().connect("jdbc:teiid:objectExampleVDB", null);
+        Connection connection = embeddedServer.getDriver().connect("jdbc:teiid:objectExampleVDB", null);
+        // Connection connection = server.getDriver().connect("jdbc:teiid:javaVDB", null);
 
-        // execute(c, "SELECT performRuleOnData('org.teiid.example.drools.Message', 'Hello World', 0)", true);
-        execute(c, "SELECT * from Team.Team", true);
-        server.stop();
+        // execute(connection, "SELECT getPlayersById('dummyId')", true);
+        execute(connection, "SELECT * from TeamView.Players", true);
+        embeddedServer.stop();
+
+        // defaultCacheManager.stop();
 
     }
 

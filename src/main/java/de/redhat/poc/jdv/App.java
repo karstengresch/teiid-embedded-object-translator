@@ -6,6 +6,7 @@ import org.infinispan.manager.DefaultCacheManager;
 import org.teiid.runtime.EmbeddedConfiguration;
 import org.teiid.runtime.EmbeddedServer;
 import org.teiid.translator.ExecutionFactory;
+import org.teiid.translator.object.simpleMap.SimpleMapCacheExecutionFactory;
 
 import java.sql.Connection;
 import java.util.Arrays;
@@ -31,22 +32,24 @@ public class App
 
         // "durch die Brust ins Auge" (German de-facto-proverb)
         DefaultCacheManager defaultCacheManager = new DefaultCacheManager();
-        defaultCacheManager.defineConfiguration("infinispan_teamobject", new ConfigurationBuilder().simpleCache(true).build());
+        defaultCacheManager.defineConfiguration("Default", new ConfigurationBuilder().simpleCache(true).build());
         Cache<String, Object> cache = defaultCacheManager.getCache();
         cache.put("Team", theTestObject);
 
         // Teiid stuff
         EmbeddedServer embeddedServer = new EmbeddedServer();
         embeddedServer.start(new EmbeddedConfiguration());
-        // ExecutionFactory simpleMapCacheExecutionFactory = new SimpleMapCacheExecutionFactory();
+        // ExecutionFactory executionFactory = new ExecutionFactory();
+        // executionFactory.start();
+        // embeddedServer.addTranslator("map-cache", executionFactory);
+        // executionFactory.setSupportsDirectQueryProcedure(true);
+        ExecutionFactory simpleMapCacheExecutionFactory = new SimpleMapCacheExecutionFactory();
+        simpleMapCacheExecutionFactory.start();
+        embeddedServer.addTranslator("map-cache", simpleMapCacheExecutionFactory);
+        simpleMapCacheExecutionFactory.setSupportsDirectQueryProcedure(true);
 
-        ExecutionFactory executionFactory = new ExecutionFactory();
-        executionFactory.start();
-        embeddedServer.addTranslator("map-cache", executionFactory);
-        executionFactory.setSupportsDirectQueryProcedure(true);
         embeddedServer.deployVDB(App.class.getClassLoader().getResourceAsStream("object_example.vdb"));
         // server.deployVDB(App.class.getClassLoader().getResourceAsStream("java_method.vdb"));
-
         Connection connection = embeddedServer.getDriver().connect("jdbc:teiid:objectExampleVDB", null);
         // Connection connection = server.getDriver().connect("jdbc:teiid:javaVDB", null);
 
@@ -57,7 +60,6 @@ public class App
         // defaultCacheManager.stop();
 
     }
-
 
     private static TeamObject preparePlayers() {
       TeamObject teamObject = new TeamObject();

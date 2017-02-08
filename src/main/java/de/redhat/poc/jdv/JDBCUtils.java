@@ -69,7 +69,7 @@ public class JDBCUtils
         }
 	}
 	
-	public static void execute(Connection connection, String sql, boolean closeConn) throws Exception {
+	public static void execute(Connection connection, String sql, boolean closeConn) throws SQLException {
 	    
 	    System.out.println("SQL: " + sql); //$NON-NLS-1$ 
         
@@ -96,6 +96,7 @@ public class JDBCUtils
             }
         } catch (SQLException e) {
             e.printStackTrace();
+            throw e;
         } finally {
             close(rs, stmt);
             if(closeConn)

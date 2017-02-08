@@ -1,4 +1,18 @@
-<vdb name="objectExampleVDB" version="1">
+<vdb name="TemperatureVDB" version="1">
+  <model name="TemperatureModel" type="VIRTUAL">
+    <metadata type="DDL"><![CDATA[
+             CREATE VIRTUAL FUNCTION celsiusToFahrenheit(celsius decimal) RETURNS decimal OPTIONS (JAVA_CLASS 'de.redhat.poc.jdv.TemperatureConverter',  JAVA_METHOD 'celsiusToFahrenheit');
+
+                             ]]>
+    </metadata>
+  </model>
+</vdb>
+
+<!--
+Put out first:          CREATE VIRTUAL FUNCTION sumAll(arg integer) RETURNS integer OPTIONS (JAVA_CLASS 'org.something.SumAll',  JAVA_METHOD 'addInput', AGGREGATE 'true', VARARGS 'true', "NULL-ON-NULL" 'true');
+-->
+
+<!--<vdb name="objectExampleVDB" version="1">
   <model name="TestUserFunction" type="VIRTUAL">
     <metadata type="DDL"><![CDATA[
 
@@ -10,7 +24,8 @@
         ARRAYTABLE(OT.udf_row COLUMNS name string) AS AT
 
         ]]> </metadata>
-  </model>
+  </model>-->
 
 
-</vdb>
+
+

@@ -1,0 +1,16 @@
+<vdb name="objectExampleVDB" version="1">
+  <model name="TestUserFunction" type="VIRTUAL">
+    <metadata type="DDL"><![CDATA[
+
+        SELECT AT.* FROM
+
+        OBJECTTABLE('rowScript' PASSING foo(parm1) AS udf_rows
+        COLUMNS udf_row OBJECT 'rowScript') AS OT,
+
+        ARRAYTABLE(OT.udf_row COLUMNS name string) AS AT
+
+        ]]> </metadata>
+  </model>
+
+
+</vdb>

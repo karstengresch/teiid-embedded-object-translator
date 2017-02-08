@@ -6,10 +6,8 @@ import org.infinispan.manager.DefaultCacheManager;
 import org.teiid.runtime.EmbeddedConfiguration;
 import org.teiid.runtime.EmbeddedServer;
 import org.teiid.translator.ExecutionFactory;
-import org.teiid.translator.object.ClassRegistry;
 import org.teiid.translator.object.simpleMap.SimpleMapCacheExecutionFactory;
 
-import javax.activation.DataSource;
 import java.sql.Connection;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -17,7 +15,6 @@ import java.util.List;
 import java.util.Map;
 
 import static de.redhat.poc.jdv.JDBCUtils.execute;
-
 
 /**
  * Hello world!
@@ -42,10 +39,6 @@ public class App
         EmbeddedServer embeddedServer = new EmbeddedServer();
         embeddedServer.start(new EmbeddedConfiguration());
 
-        // DataSource ds = embeddedServer.get.newDataSource("org.h2.Driver", "jdbc:h2:mem://localhost/~/account", "sa", "sa");
-        embeddedServer.addConnectionFactory("java:/accounts-ds", ds);
-
-
         // ExecutionFactory executionFactory = new ExecutionFactory();
         // executionFactory.start();
         // embeddedServer.addTranslator("map-cache", executionFactory);
@@ -54,8 +47,8 @@ public class App
         simpleMapCacheExecutionFactory.start();
         embeddedServer.addTranslator("map-cache", simpleMapCacheExecutionFactory);
         simpleMapCacheExecutionFactory.setSupportsDirectQueryProcedure(true);
-        ClassRegistry classRegistry = new ClassRegistry();
-        classRegistry.registerClass(TeamObject.class);
+        // ClassRegistry classRegistry = new ClassRegistry();
+        // classRegistry.registerClass(TeamObject.class);
 
 
 

@@ -1,0 +1,49 @@
+<vdb name="TemperatureVDB" version="1">
+  <model name="TemperatureModel" type="VIRTUAL">
+    <metadata type="DDL"><![CDATA[
+             CREATE VIRTUAL FUNCTION celsiusToFahrenheit(celsius decimal) RETURNS decimal OPTIONS (JAVA_CLASS 'de.redhat.poc.jdv.TemperatureConverter',  JAVA_METHOD 'celsiusToFahrenheit');
+
+                             ]]>
+    </metadata>
+  </model>
+
+  <model name="MultiValueModel" type="VIRTUAL">
+    <metadata type="DDL"><![CDATA[
+             CREATE VIRTUAL FUNCTION getManyValues(celsius string) RETURNS object OPTIONS (JAVA_CLASS 'de.redhat.poc.jdv.TemperatureConverter',  JAVA_METHOD 'getManyValues');
+
+                             ]]>
+    </metadata>
+  </model>
+
+
+
+  <!--
+
+  SELECT AT.* FROM OBJECTTABLE('udf_rows' PASSING foo(parm1) AS udf_rows COLUMNS udf_row OBJECT 'teiid_row') AS OT, ARRAYTABLE(OT.udf_row COLUMNS col1 type1, col2 type2 ...) AS AT
+
+  -->
+
+
+</vdb>
+
+<!--
+Put out first:          CREATE VIRTUAL FUNCTION sumAll(arg integer) RETURNS integer OPTIONS (JAVA_CLASS 'org.something.SumAll',  JAVA_METHOD 'addInput', AGGREGATE 'true', VARARGS 'true', "NULL-ON-NULL" 'true');
+-->
+
+<!--<vdb name="objectExampleVDB" version="1">
+  <model name="TestUserFunction" type="VIRTUAL">
+    <metadata type="DDL"><![CDATA[
+
+        SELECT AT.* FROM
+
+        OBJECTTABLE('rowScript' PASSING foo(parm1) AS udf_rows
+        COLUMNS udf_row OBJECT 'rowScript') AS OT,
+
+        ARRAYTABLE(OT.udf_row COLUMNS name string) AS AT
+
+        ]]> </metadata>
+  </model>-->
+
+
+
+

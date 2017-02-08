@@ -11,10 +11,12 @@ import org.teiid.translator.ExecutionFactory;
 import org.teiid.translator.TranslatorException;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
-import static de.redhat.poc.jdv.JDBCUtils.execute;
+import static de.redhat.poc.jdv.JDBCUtils.executeObject;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -102,7 +104,10 @@ public class UserDefinedFunctionsTest
     }
     try
     {
-      execute(connection, "SELECT celsiusToFahrenheit(100)", false);
+      List<Object> temperature = executeObject(connection, "SELECT celsiusToFahrenheit(100)", false);
+      assertTrue(!temperature.isEmpty());
+      assertTrue(temperature.get(0).equals(BigDecimal.valueOf(212.0)));
+
 
     }
     catch (Exception e) // doesn't catch the exception!

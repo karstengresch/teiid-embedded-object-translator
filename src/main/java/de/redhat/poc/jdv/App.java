@@ -6,8 +6,10 @@ import org.infinispan.manager.DefaultCacheManager;
 import org.teiid.runtime.EmbeddedConfiguration;
 import org.teiid.runtime.EmbeddedServer;
 import org.teiid.translator.ExecutionFactory;
+import org.teiid.translator.object.ClassRegistry;
 import org.teiid.translator.object.simpleMap.SimpleMapCacheExecutionFactory;
 
+import javax.activation.DataSource;
 import java.sql.Connection;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -32,13 +34,18 @@ public class App
 
         // "durch die Brust ins Auge" (German de-facto-proverb)
         DefaultCacheManager defaultCacheManager = new DefaultCacheManager();
-        defaultCacheManager.defineConfiguration("Default", new ConfigurationBuilder().simpleCache(true).build());
+        defaultCacheManager.defineConfiguration("Team", new ConfigurationBuilder().simpleCache(true).build());
         Cache<String, Object> cache = defaultCacheManager.getCache();
         cache.put("Team", theTestObject);
 
         // Teiid stuff
         EmbeddedServer embeddedServer = new EmbeddedServer();
         embeddedServer.start(new EmbeddedConfiguration());
+
+        // DataSource ds = embeddedServer.get.newDataSource("org.h2.Driver", "jdbc:h2:mem://localhost/~/account", "sa", "sa");
+        embeddedServer.addConnectionFactory("java:/accounts-ds", ds);
+
+
         // ExecutionFactory executionFactory = new ExecutionFactory();
         // executionFactory.start();
         // embeddedServer.addTranslator("map-cache", executionFactory);
@@ -47,6 +54,10 @@ public class App
         simpleMapCacheExecutionFactory.start();
         embeddedServer.addTranslator("map-cache", simpleMapCacheExecutionFactory);
         simpleMapCacheExecutionFactory.setSupportsDirectQueryProcedure(true);
+        ClassRegistry classRegistry = new ClassRegistry();
+        classRegistry.registerClass(TeamObject.class);
+
+
 
         embeddedServer.deployVDB(App.class.getClassLoader().getResourceAsStream("object_example.vdb"));
         // server.deployVDB(App.class.getClassLoader().getResourceAsStream("java_method.vdb"));

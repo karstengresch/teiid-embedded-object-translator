@@ -1,6 +1,6 @@
 <vdb name="objectExampleVDB" version="1">
   <model name="Team" visible="false">
-    <source name="objsource" translator-name="map-cache" connection-jndi-name="java:Default"/>
+    <source name="objsource" translator-name="map-cache" connection-jndi-name="java:/Team"/>
     <metadata type="DDL"><![CDATA[
 
             CREATE FOREIGN TABLE Team (

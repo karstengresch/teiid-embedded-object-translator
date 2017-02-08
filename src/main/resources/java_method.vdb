@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<vdb name="javaVDB" version="1">
+
+    <description>Trying to map the result of a Java method</description>
+    
+    
+      <model name="JavaModel" type="VIRTUAL">
+        <metadata type="DDL"><![CDATA[
+        
+             CREATE VIRTUAL FUNCTION getPlayersById(playersId string) RETURNS object OPTIONS (JAVA_CLASS 'de.redhat.poc.jdv.TeamObject', JAVA_METHOD 'getPlayersById');
+        ]]>
+        </metadata>
+    </model>
+       
+</vdb>

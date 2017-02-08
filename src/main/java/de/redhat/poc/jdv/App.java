@@ -1,5 +1,8 @@
 package de.redhat.poc.jdv;
 
+import org.infinispan.Cache;
+import org.infinispan.configuration.cache.ConfigurationBuilder;
+import org.infinispan.manager.DefaultCacheManager;
 import org.teiid.runtime.EmbeddedConfiguration;
 import org.teiid.runtime.EmbeddedServer;
 import org.teiid.translator.ExecutionFactory;
@@ -27,15 +30,15 @@ public class App
         testMap.put("teamObjectKey", theTestObject);
 
         // "durch die Brust ins Auge" (German de-facto-proverb)
-        /*DefaultCacheManager defaultCacheManager = new DefaultCacheManager();
+        DefaultCacheManager defaultCacheManager = new DefaultCacheManager();
         defaultCacheManager.defineConfiguration("infinispan_teamobject", new ConfigurationBuilder().simpleCache(true).build());
-        Cache<String, Object> cache = defaultCacheManager.getCache("infinispan_teamobject");
-        cache.put("teamObjectKey", theTestObject);
-*/
+        Cache<String, Object> cache = defaultCacheManager.getCache();
+        cache.put("Team", theTestObject);
+
         // Teiid stuff
         EmbeddedServer embeddedServer = new EmbeddedServer();
         embeddedServer.start(new EmbeddedConfiguration());
-        // ExecutionFactory executionFactory = new SimpleMapCacheExecutionFactory();
+        // ExecutionFactory simpleMapCacheExecutionFactory = new SimpleMapCacheExecutionFactory();
 
         ExecutionFactory executionFactory = new ExecutionFactory();
         executionFactory.start();

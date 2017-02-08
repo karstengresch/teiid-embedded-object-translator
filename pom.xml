@@ -45,19 +45,31 @@
     <dependency>
       <groupId>org.jboss.teiid</groupId>
       <artifactId>teiid-runtime</artifactId>
-      <version>9.2.0.Alpha1</version>
+      <version>${version.teiid}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.teiid</groupId>
+      <artifactId>teiid-common-core</artifactId>
+      <version>${version.teiid}</version>
     </dependency>
     <dependency>
       <groupId>org.jboss.teiid</groupId>
       <artifactId>teiid-admin</artifactId>
-      <version>9.2.0.Alpha1</version>
+      <version>${version.teiid}</version>
     </dependency>
 
     <dependency>
       <groupId>org.jboss.teiid.connectors</groupId>
       <artifactId>translator-object</artifactId>
-      <version>9.2.0.Alpha1</version>
+      <version>${version.teiid}</version>
     </dependency>
+
+    <dependency>
+      <groupId>org.infinispan</groupId>
+      <artifactId>infinispan-core</artifactId>
+      <version>8.2.6.Final</version>
+    </dependency>
+
    <!-- <dependency>
       <groupId>org.jboss.teiid</groupId>
       <artifactId>teiid-common-core</artifactId>
@@ -103,7 +115,7 @@
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
-      <version>3.8.1</version>
+      <version>4.12</version>
       <scope>test</scope>
     </dependency>
 
@@ -134,7 +146,32 @@
             	</exclusion>
             </exclusions>
         </dependency>
+    <dependency>
+      <groupId>org.jboss.teiid</groupId>
+      <artifactId>teiid-admin</artifactId>
+      <version>9.2.0.Alpha1</version>
+    </dependency>
 
 
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <phase>install</phase>
+            <goals>
+              <goal>copy-dependencies</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/lib</outputDirectory>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>

@@ -24,6 +24,8 @@ package de.redhat.poc.jdv;
 import java.sql.*;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class JDBCUtils
 {
@@ -107,7 +109,7 @@ public class JDBCUtils
         System.out.println();
     }
 
-  public static List<Object> executeObject(Connection connection, String sql, boolean closeConn) throws SQLException {
+  public static List<Object> executeForList(Connection connection, String sql, boolean closeConn) throws SQLException {
 
     System.out.println("SQL: " + sql); //$NON-NLS-1$
 
@@ -129,8 +131,49 @@ public class JDBCUtils
             if (i > 0) {
               System.out.print(", ");
             }
-            // System.out.print(rs.getObject(i+1));
+            System.out.print(rs.getObject(i+1));
             result.add(rs.getObject(i+1));
+          }
+          System.out.println();
+        }
+      }
+    } catch (SQLException e) {
+      e.printStackTrace();
+      throw e;
+    } finally {
+      close(rs, stmt);
+      if(closeConn)
+        close(connection);
+    }
+    System.out.println();
+
+    return result;
+  }
+
+  public static Map<Object, Object> executeForMap(Connection connection, String sql, boolean closeConn) throws SQLException {
+
+    System.out.println("SQL: " + sql); //$NON-NLS-1$
+
+    Map<Object, Object> result = new ConcurrentHashMap<>();
+
+    Statement stmt = null;
+    ResultSet rs = null;
+
+    try {
+      stmt = connection.createStatement();
+      boolean hasResults = stmt.execute(sql);
+      if (hasResults) {
+        rs = stmt.getResultSet();
+        ResultSetMetaData metadata = rs.getMetaData();
+        int columns = metadata.getColumnCount();
+        for (int row = 1; rs.next(); row++) {
+          System.out.print(row + ": ");
+          for (int i = 0; i < columns; i++) {
+            if (i > 0) {
+              System.out.print(", ");
+            }
+            System.out.print(rs.getObject(i+1));
+            result.put(rs.getObject(1), rs.getObject(i+1));
           }
           System.out.println();
         }

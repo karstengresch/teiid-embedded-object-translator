@@ -16,7 +16,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-import static de.redhat.poc.jdv.JDBCUtils.executeObject;
+import static de.redhat.poc.jdv.JDBCUtils.executeForList;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -103,7 +103,7 @@ public class UserDefinedFunctionsTest
     }
     try
     {
-      List<Object> temperature = executeObject(connection, "SELECT celsiusToFahrenheit(100)", true);
+      List<Object> temperature = executeForList(connection, "SELECT celsiusToFahrenheit(100)", true);
       assertTrue(!temperature.isEmpty());
       assertTrue(temperature.get(0).equals(BigDecimal.valueOf(212.0)));
       System.out.println("Result was: " + temperature.get(0));
@@ -133,12 +133,21 @@ public class UserDefinedFunctionsTest
     }
     try
     {
-      List<Object> resultList = executeObject(connection, "SELECT getManyValues(\'SuperDuperId\')", false);
+      List<Object> resultList = executeForList(connection, "SELECT getManyValues(\'SuperDuperId\')", false);
       assertTrue(!resultList.isEmpty());
       // assertTrue(temperature.get(0).equals(BigDecimal.valueOf(212.0)));
       System.out.println("Result was: " + resultList.get(0));
     }
     catch (Exception e) // doesn't catch the exception!
+    {
+      e.printStackTrace();
+      fail();
+    }
+    try
+    {
+      connection.close();
+    }
+    catch (SQLException e)
     {
       e.printStackTrace();
       fail();

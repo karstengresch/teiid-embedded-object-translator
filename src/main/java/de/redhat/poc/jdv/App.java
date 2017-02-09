@@ -1,12 +1,7 @@
 package de.redhat.poc.jdv;
 
-import org.infinispan.Cache;
-import org.infinispan.configuration.cache.ConfigurationBuilder;
-import org.infinispan.manager.DefaultCacheManager;
 import org.teiid.runtime.EmbeddedConfiguration;
 import org.teiid.runtime.EmbeddedServer;
-import org.teiid.translator.ExecutionFactory;
-import org.teiid.translator.object.simpleMap.SimpleMapCacheExecutionFactory;
 
 import java.sql.Connection;
 import java.util.Arrays;
@@ -30,10 +25,10 @@ public class App
         testMap.put("teamObjectKey", theTestObject);
 
         // "durch die Brust ins Auge" (German de-facto-proverb)
-        DefaultCacheManager defaultCacheManager = new DefaultCacheManager();
-        defaultCacheManager.defineConfiguration("Team", new ConfigurationBuilder().simpleCache(true).build());
-        Cache<String, Object> cache = defaultCacheManager.getCache();
-        cache.put("Team", theTestObject);
+        // DefaultCacheManager defaultCacheManager = new DefaultCacheManager();
+        // defaultCacheManager.defineConfiguration("Team", new ConfigurationBuilder().simpleCache(true).build());
+        // Cache<String, Object> cache = defaultCacheManager.getCache();
+        // cache.put("Team", theTestObject);
 
         // Teiid stuff
         EmbeddedServer embeddedServer = new EmbeddedServer();
@@ -43,10 +38,10 @@ public class App
         // executionFactory.start();
         // embeddedServer.addTranslator("map-cache", executionFactory);
         // executionFactory.setSupportsDirectQueryProcedure(true);
-        ExecutionFactory simpleMapCacheExecutionFactory = new SimpleMapCacheExecutionFactory();
-        simpleMapCacheExecutionFactory.start();
-        embeddedServer.addTranslator("map-cache", simpleMapCacheExecutionFactory);
-        simpleMapCacheExecutionFactory.setSupportsDirectQueryProcedure(true);
+        // ExecutionFactory simpleMapCacheExecutionFactory = new SimpleMapCacheExecutionFactory();
+        // simpleMapCacheExecutionFactory.start();
+        // embeddedServer.addTranslator("map-cache", simpleMapCacheExecutionFactory);
+        // simpleMapCacheExecutionFactory.setSupportsDirectQueryProcedure(true);
         // ClassRegistry classRegistry = new ClassRegistry();
         // classRegistry.registerClass(TeamObject.class);
 

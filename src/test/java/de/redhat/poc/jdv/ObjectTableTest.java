@@ -31,30 +31,23 @@ public class ObjectTableTest
    * @param testName name of the test case
    */
 
-  private static EmbeddedServer embeddedServer= new EmbeddedServer();
+  private static EmbeddedServer embeddedServer = new EmbeddedServer();
 
   @BeforeClass
   public static void startServer() throws TranslatorException
   {
-
     embeddedServer.start(new EmbeddedConfiguration());
-//    ExecutionFactory executionFactory = new ExecutionFactory();
-//    executionFactory.start();
-
   }
-
-
 
   @Test
   public void testBaseSetup()
   {
-    assertTrue( true );
+    assertTrue(true);
   }
 
   @Test
-  public void test() throws SQLException
+  public void testObjectMapAndList()
   {
-    // Add VDB => shall contain void method
     try
     {
       embeddedServer.deployVDB(App.class.getClassLoader().getResourceAsStream("object-vdb.xml"));
@@ -67,47 +60,41 @@ public class ObjectTableTest
     }
     catch (ConnectorManagerRepository.ConnectorManagerException e)
     {
-      e.printStackTrace();
-      fail();
+      fail("ConnectorManagerException occured: " + e.getMessage());
     }
     catch (TranslatorException e)
     {
-      e.printStackTrace();
-      fail();
+      fail("TranslatorException occured: " + e.getMessage());
     }
     catch (IOException e)
     {
-      e.printStackTrace();
-      fail();
+      fail("IOException occured: " + e.getMessage());
     }
     catch (InterruptedException e)
     {
-      e.printStackTrace();
-      fail();
+      fail("InterruptedException occured: " + e.getMessage());
     }
 
     Connection connection = null;
+
     try
     {
       connection = embeddedServer.getDriver().connect("jdbc:teiid:ObjectExampleVDB", null);
       Map<Object, Object> team = executeForMap(connection, "SELECT * from Team", false);
       System.out.println("Result was: " + team.toString());
-      List<Object> players =  executeForList(connection, "SELECT * from Player", true);
+      List<Object> players = executeForList(connection, "SELECT * from Player", true);
       System.out.println("Result was: " + players.toString());
-
+      connection.close();
     }
-    catch (Exception e)
+    catch (SQLException e)
     {
-      e.printStackTrace();
-
+      fail("SQLException occured: " + e.getMessage());
     }
-
-    connection.close();
   }
 
-
   @AfterClass
-  public static void stopServer() {
+  public static void stopServer()
+  {
     embeddedServer.stop();
   }
 }

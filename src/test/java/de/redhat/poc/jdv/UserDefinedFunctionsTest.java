@@ -7,7 +7,6 @@ import org.teiid.deployers.VirtualDatabaseException;
 import org.teiid.dqp.internal.datamgr.ConnectorManagerRepository;
 import org.teiid.runtime.EmbeddedConfiguration;
 import org.teiid.runtime.EmbeddedServer;
-import org.teiid.translator.ExecutionFactory;
 import org.teiid.translator.TranslatorException;
 
 import java.io.IOException;
@@ -36,25 +35,8 @@ public class UserDefinedFunctionsTest
   @BeforeClass
   public static void startServer() throws TranslatorException
   {
-
     embeddedServer.start(new EmbeddedConfiguration());
-    ExecutionFactory executionFactory = new ExecutionFactory();
-    executionFactory.start();
-    // embeddedServer.addTranslator("translator-java", executionFactory);
-    executionFactory.setSupportsDirectQueryProcedure(true);
-    // server.deployVDB(App.class.getClassLoader().getResourceAsStream("object_example.vdb"));
-    // server.deployVDB(App.class.getClassLoader().getResourceAsStream("java_method.vdb"));
-
-    // Connection connection = server.getDriver().connect("jdbc:teiid:objectExampleVDB", null);
-    // Connection connection = server.getDriver().connect("jdbc:teiid:javaVDB", null);
-
-    // execute(connection, "SELECT getPlayersById('dummyId')", true);
-    // execute(connection, "SELECT * from Team.Team", true);
-
-
   }
-
-
 
   @Test
   public void testBaseSetup()
@@ -65,10 +47,10 @@ public class UserDefinedFunctionsTest
   @Test
   public void testUserDefinedFunctionCallSingleResult()
   {
-    // Add VDB => shall contain void method
     try
     {
       embeddedServer.deployVDB(App.class.getClassLoader().getResourceAsStream("user_defined_functions.vdb"));
+      Thread.sleep(1000);
     }
     catch (VirtualDatabaseException e)
     {
@@ -90,6 +72,10 @@ public class UserDefinedFunctionsTest
       e.printStackTrace();
       fail();
     }
+    catch (InterruptedException e)
+    {
+      e.printStackTrace();
+    }
 
     Connection connection = null;
     try
@@ -108,7 +94,17 @@ public class UserDefinedFunctionsTest
       assertTrue(temperature.get(0).equals(BigDecimal.valueOf(212.0)));
       System.out.println("Result was: " + temperature.get(0));
     }
-    catch (Exception e) // doesn't catch the exception!
+    catch (Exception e)
+    {
+      e.printStackTrace();
+      fail();
+    }
+
+    try
+    {
+      connection.close();
+    }
+    catch (SQLException e)
     {
       e.printStackTrace();
       fail();
@@ -135,10 +131,18 @@ public class UserDefinedFunctionsTest
     {
       List<Object> resultList = executeForList(connection, "SELECT getManyValues(\'SuperDuperId\')", false);
       assertTrue(!resultList.isEmpty());
-      // assertTrue(temperature.get(0).equals(BigDecimal.valueOf(212.0)));
       System.out.println("Result was: " + resultList.get(0));
     }
-    catch (Exception e) // doesn't catch the exception!
+    catch (Exception e)
+    {
+      e.printStackTrace();
+      fail();
+    }
+    try
+    {
+      connection.close();
+    }
+    catch (SQLException e)
     {
       e.printStackTrace();
       fail();
@@ -153,7 +157,6 @@ public class UserDefinedFunctionsTest
       fail();
     }
   }
-
 
   @AfterClass
   public static void stopServer() {

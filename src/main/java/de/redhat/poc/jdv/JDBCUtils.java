@@ -22,10 +22,10 @@
 package de.redhat.poc.jdv;
 
 import java.sql.*;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 public class JDBCUtils
 {
@@ -154,7 +154,7 @@ public class JDBCUtils
 
     System.out.println("SQL: " + sql); //$NON-NLS-1$
 
-    Map<Object, Object> result = new ConcurrentHashMap<>();
+    Map<Object, Object> result = new HashMap<>();
 
     Statement stmt = null;
     ResultSet rs = null;

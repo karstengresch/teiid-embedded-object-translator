@@ -20,7 +20,7 @@ public class TemperatureConverter
     List<Object> result = new LinkedList<Object>();
     result.add(theDummyId);
 
-    List<String> dummyStringList = Arrays.asList("Paul Celan", "Pablo Neruda", "Ingeborg Bachmann", "Thomas Kling");
+    List<String> dummyStringList = Arrays.asList("Celsius", "Fahrenheit", "Kelvin", "Holiday", "Heisenberg");
 
     result.add(dummyStringList);
 
